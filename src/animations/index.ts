@@ -33,8 +33,6 @@ function skipIntro() {
 
   document.documentElement.dataset.skipIntro = 'true';
 
-  const header = document.querySelector('[data-header]') as HTMLElement;
-  if (header) header.style.opacity = '1';
   const footer = document.querySelector('[data-footer]') as HTMLElement;
   if (footer) {
     footer.style.visibility = 'visible';
@@ -46,12 +44,9 @@ function skipIntro() {
 
   initScrollAnimations();
 
-  if (header) header.style.opacity = '1';
-
   const hash = window.location.hash.replace('#', '');
   if (hash) {
     requestAnimationFrame(() => {
-      if (header) header.style.opacity = '1';
 
       if (hash === 'about') {
         const main = document.querySelector('[data-main]') as HTMLElement;

@@ -7,11 +7,12 @@ const base = import.meta.env.BASE_URL;
       <img src={`${base}Images/XR Logo.png`} alt="XR Club" class="header__logo-img" fetchpriority="high" />
     </a>
     <nav class="header__nav">
-      <a href="#about" class="header__link" data-nav-link data-scroll-to="about">About</a>
-      <a href="#projects" class="header__link" data-nav-link data-scroll-to="projects">Projects</a>
-      <a href="#lab" class="header__link" data-nav-link data-scroll-to="lab">Lab & History</a>
-      <a href="#events" class="header__link" data-nav-link data-scroll-to="events">Events</a>
-      <a href="#board" class="header__link" data-nav-link data-scroll-to="board">Board</a>
+      <a class="header__link" data-nav-link data-scroll-to="about">About</a>
+      <a class="header__link" data-nav-link data-scroll-to="projects">Projects</a>
+      <a class="header__link" data-nav-link data-scroll-to="lab">Lab & History</a>
+      <a class="header__link" data-nav-link data-scroll-to="events">Events</a>
+      <a class="header__link" data-nav-link data-scroll-to="board">Board</a>
+      <a class="header__link" data-nav-link data-scroll-to="resources">Equipment</a>
       <a href="https://discord.gg/mn8ZKTwXFQ" target="_blank" rel="noopener" class="header__link">Discord</a>
       <a href="https://terplink.umd.edu/organization/xr-club" target="_blank" rel="noopener" class="header__link">TerpLink</a>
       <a href={`${base}login`} class="header__link" id="auth-login-link">Login / Sign Up</a>
@@ -32,7 +33,7 @@ const base = import.meta.env.BASE_URL;
     right: 0;
     z-index: var(--z-navigation);
     pointer-events: none;
-    opacity: 0;
+    opacity: 1;
     padding: 1rem var(--page-padding);
     display: flex;
     align-items: flex-start;
@@ -76,6 +77,7 @@ const base = import.meta.env.BASE_URL;
     color: rgba(255, 255, 255, 0.7);
     transition: color 200ms ease;
     white-space: nowrap;
+    cursor: pointer;
   }
 
   .header__link:hover {

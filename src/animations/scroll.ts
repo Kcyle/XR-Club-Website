@@ -29,7 +29,7 @@ function initRenderCanvas(canvas: HTMLCanvasElement, frameTriggers: FrameTrigger
 
   function resizeCanvas() {
     const parent = canvas.parentElement!;
-    const dpr = Math.min(window.devicePixelRatio, 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = parent.clientWidth * dpr;
     canvas.height = parent.clientHeight * dpr;
     drawFrame(currentFrame);
@@ -49,7 +49,7 @@ function initRenderCanvas(canvas: HTMLCanvasElement, frameTriggers: FrameTrigger
     const iw = img.naturalWidth;
     const ih = img.naturalHeight;
 
-    const scale = Math.max(cw / iw, ch / ih);
+    const scale = Math.min(cw / iw, ch / ih);
     const sw = iw * scale;
     const sh = ih * scale;
     const sx = (cw - sw) / 2;
@@ -165,7 +165,6 @@ export function initScrollAnimations() {
   const aboutGrid = $('[data-about-grid]', about);
 
   const skippingIntro = document.documentElement.dataset.skipIntro === 'true';
-  if (!skippingIntro) gsap.set(header, { opacity: 0 });
   gsap.set(render, { scale: 0.4, x: '150%', y: '20%', zIndex: 0 });
   gsap.set(about, { scale: 0.4, x: '-150%', y: '20%', zIndex: 0 });
   if (aboutContent) gsap.set(aboutContent, { yPercent: 100 });
@@ -304,6 +303,7 @@ export function initScrollAnimations() {
     frame: RENDER_TOTAL_FRAMES - 1,
     fired: false,
     callback: () => {
+      if (tl.scrollTrigger && !tl.scrollTrigger.isActive) return;
       renderPlayer?.stop();
       bookFallFired = true;
 
@@ -370,34 +370,39 @@ export function initScrollAnimations() {
     renderPlayer = initRenderCanvas(renderCanvas, frameTriggers);
   }
 
+  function cleanupBookFall() {
+    if (!bookFallFired) return;
+    bookFallFired = false;
+    if (bookFallTl) {
+      bookFallTl.kill();
+      bookFallTl = null;
+    }
+    gsap.set(render, { clipPath: 'none', visibility: 'visible', zIndex: 2 });
+    if (aboutHeader) gsap.killTweensOf(aboutHeader);
+    aboutCards.forEach(c => gsap.killTweensOf(c));
+    if (header) gsap.killTweensOf(header);
+    if (footer) gsap.killTweensOf(footer);
+  }
+
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: main,
       start: 'top top',
       end: `+=${totalScrollVh}%`,
-      scrub: 1.5,
+      scrub: true,
       pin: true,
-      fastScrollEnd: true,
+      onLeave: () => {
+        renderPlayer?.stop();
+        renderStopped = true;
+      },
+      onEnterBack: () => {
+        cleanupBookFall();
+      },
       onUpdate: (self) => {
         const progress = self.progress * totalUnits;
 
-        if (self.direction === -1 && bookFallFired) {
-          if (progress < 3.4) {
-            bookFallFired = false;
-
-            if (bookFallTl) {
-              bookFallTl.kill();
-              bookFallTl = null;
-            }
-
-            gsap.set(render, { clipPath: 'none', visibility: 'visible', zIndex: 2 });
-
-            if (aboutHeader) gsap.killTweensOf(aboutHeader);
-            aboutCards.forEach(c => gsap.killTweensOf(c));
-
-            tl.invalidate();
-            tl.progress(self.progress);
-          }
+        if (self.direction === -1 && bookFallFired && progress < 3.8) {
+          cleanupBookFall();
         }
 
         if (progress > 2.0) {
@@ -413,8 +418,6 @@ export function initScrollAnimations() {
       },
     },
   });
-
-  gsap.set(header, { opacity: 1 });
 
   if (heroTitle) {
     tl.to(heroTitle, {

@@ -95,6 +95,7 @@ const base = import.meta.env.BASE_URL;
     height: 100vh;
     overflow: hidden;
     visibility: hidden;
+    contain: layout style paint;
   }
 
   .lab::before {
@@ -103,7 +104,7 @@ const base = import.meta.env.BASE_URL;
     top: 0;
     left: 0;
     right: 0;
-    height: 120px;
+    height: 7.5rem;
     background: linear-gradient(rgba(0, 0, 0, 0.95), transparent);
     z-index: 3;
     pointer-events: none;
@@ -115,7 +116,7 @@ const base = import.meta.env.BASE_URL;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 120px;
+    height: 7.5rem;
     background: linear-gradient(transparent, rgba(0, 0, 0, 0.95));
     z-index: 3;
     pointer-events: none;
@@ -145,8 +146,8 @@ const base = import.meta.env.BASE_URL;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 3.5rem var(--page-padding) 5rem;
+    justify-content: flex-start;
+    padding: 7rem var(--page-padding) 3rem;
     gap: 1.2rem;
     box-sizing: border-box;
   }
@@ -166,7 +167,7 @@ const base = import.meta.env.BASE_URL;
     left: 50%;
     transform: translate(-50%, -50%);
     font-family: 'Inter', sans-serif;
-    font-size: clamp(6rem, 11vw, 12rem);
+    font-size: clamp(7rem, 12vw, 14rem);
     font-weight: 900;
     letter-spacing: -0.04em;
     color: transparent;
@@ -178,7 +179,7 @@ const base = import.meta.env.BASE_URL;
 
   .lab__title {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(3rem, 6vw, 5.5rem);
+    font-size: clamp(3.5rem, 7vw, 6.5rem);
     font-weight: 800;
     letter-spacing: -0.04em;
     color: #fff;
@@ -188,10 +189,10 @@ const base = import.meta.env.BASE_URL;
 
   .lab__accent {
     position: absolute;
-    bottom: -3.5rem;
+    bottom: -4rem;
     right: -1.5rem;
     font-family: 'Inter', sans-serif;
-    font-size: clamp(1.1rem, 1.5vw, 1.5rem);
+    font-size: clamp(1.2rem, 1.6vw, 1.6rem);
     font-weight: 700;
     font-style: italic;
     color: rgba(255, 255, 255, 0.45);
@@ -203,6 +204,9 @@ const base = import.meta.env.BASE_URL;
   .lab__counter {
     text-align: center;
     padding: 0.3rem 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   .lab__counter-num {
@@ -247,9 +251,9 @@ const base = import.meta.env.BASE_URL;
 
   .lab__col {
     min-width: 0;
-    min-height: 0;
     display: flex;
     overflow: hidden;
+    height: 100%;
   }
 
   .lab__founder {
@@ -261,18 +265,19 @@ const base = import.meta.env.BASE_URL;
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    border-radius: 0.75rem;
     padding: 1.8rem 1.5rem;
     width: 100%;
     box-sizing: border-box;
+    height: 100%;
   }
 
   .lab__founder-photo {
-    width: 140px;
-    height: 140px;
+    width: 8.75rem;
+    height: 8.75rem;
     border-radius: 50%;
     object-fit: cover;
-    border: 3px solid rgba(255, 255, 255, 0.15);
+    border: 0.19rem solid rgba(255, 255, 255, 0.15);
   }
 
   .lab__founder-name {
@@ -292,7 +297,7 @@ const base = import.meta.env.BASE_URL;
 
   .lab__founder-desc {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.82rem, 0.95vw, 0.95rem);
+    font-size: clamp(0.88rem, 1vw, 1rem);
     font-weight: 300;
     color: rgba(255, 255, 255, 0.55);
     line-height: 1.65;
@@ -304,16 +309,19 @@ const base = import.meta.env.BASE_URL;
     background: rgba(0, 0, 0, 0.45);
     backdrop-filter: none;
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 12px;
+    border-radius: 0.75rem;
     padding: clamp(1.3rem, 2vw, 2rem);
     width: 100%;
     box-sizing: border-box;
     overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
   }
 
   .lab__section-title {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(1.1rem, 1.4vw, 1.4rem);
+    font-size: clamp(1.2rem, 1.5vw, 1.5rem);
     font-weight: 700;
     color: #fff;
     letter-spacing: -0.02em;
@@ -322,7 +330,7 @@ const base = import.meta.env.BASE_URL;
 
   .lab__section-text {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.85rem, 1vw, 1rem);
+    font-size: clamp(0.9rem, 1.05vw, 1.05rem);
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     line-height: 1.7;
@@ -346,12 +354,12 @@ const base = import.meta.env.BASE_URL;
 
   .lab__lore-img {
     width: 100%;
-    height: 150px;
-    border-radius: 10px;
+    min-height: 6rem;
+    flex: 1;
+    border-radius: 0.625rem;
     object-fit: cover;
     border: 1px solid rgba(255, 255, 255, 0.1);
     margin-bottom: 0.8rem;
-    flex-shrink: 0;
   }
 
   @media (max-width: 900px) {
@@ -365,8 +373,8 @@ const base = import.meta.env.BASE_URL;
       flex-direction: row;
       text-align: left;
     }
-    .lab__title-outline { font-size: 5rem; }
-    .lab__title { font-size: 2.5rem; }
+    .lab__title-outline { font-size: 6rem; }
+    .lab__title { font-size: 3rem; }
   }
 
   @media (max-width: 600px) {
@@ -376,20 +384,20 @@ const base = import.meta.env.BASE_URL;
     .lab__col:nth-child(3) {
       grid-column: auto;
     }
-    .lab__layout { padding: 3rem 1rem 2.5rem; }
+    .lab__layout { padding: 4rem 1rem 2.5rem; }
     .lab__founder {
       flex-direction: column;
       text-align: center;
     }
     .lab__founder-photo {
-      width: 70px;
-      height: 70px;
+      width: 4.375rem;
+      height: 4.375rem;
     }
     .lab__lore-img {
-      height: 100px;
+      min-height: 4rem;
     }
-    .lab__title-outline { font-size: 4rem; }
-    .lab__title { font-size: 2rem; }
+    .lab__title-outline { font-size: 4.5rem; }
+    .lab__title { font-size: 2.5rem; }
     .lab__accent {
       right: -0.5rem;
       bottom: -1rem;

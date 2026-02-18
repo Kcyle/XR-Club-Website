@@ -53,6 +53,7 @@ const base = import.meta.env.BASE_URL;
     overflow: hidden;
     visibility: hidden;
     z-index: 0;
+    will-change: transform;
   }
 
   .about::after {
@@ -91,7 +92,7 @@ const base = import.meta.env.BASE_URL;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 2rem var(--page-padding) 6rem;
+    padding: clamp(3rem, 5vh, 8rem) var(--page-padding) clamp(4rem, 8vh, 12rem);
     gap: 4vw;
   }
 
@@ -137,11 +138,11 @@ const base = import.meta.env.BASE_URL;
 
   .about__intro {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.9rem, 1.1vw, 1.1rem);
+    font-size: clamp(0.9rem, 0.9vw, 1.4rem);
     font-weight: 300;
     color: rgba(255, 255, 255, 0.6);
     line-height: 1.75;
-    max-width: 420px;
+    max-width: 28vw;
   }
 
   .about__right {
@@ -150,7 +151,7 @@ const base = import.meta.env.BASE_URL;
     display: grid;
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 1rem;
+    gap: clamp(0.75rem, 1vw, 1.25rem);
   }
 
   .about__card {
@@ -162,7 +163,7 @@ const base = import.meta.env.BASE_URL;
   .about__card--text {
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: clamp(1rem, 2vw, 2rem);
+    padding: clamp(1rem, 1.5vw, 3rem);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -184,19 +185,19 @@ const base = import.meta.env.BASE_URL;
 
   .about__card-title {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.85rem, 1.5vw, 1.4rem);
+    font-size: clamp(0.85rem, 1.1vw, 1.8rem);
     font-weight: 700;
     color: #fff;
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.8rem;
     letter-spacing: -0.02em;
   }
 
   .about__card-text {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.7rem, 1vw, 1.05rem);
+    font-size: clamp(0.7rem, 0.85vw, 1.3rem);
     font-weight: 300;
     color: rgba(255, 255, 255, 0.65);
-    line-height: 1.5;
+    line-height: 1.6;
     margin-bottom: 0.6rem;
   }
 
@@ -212,23 +213,23 @@ const base = import.meta.env.BASE_URL;
   .about__card--levels {
     background: rgba(0, 0, 0, 0.55);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    padding: clamp(1rem, 2vw, 2rem);
+    padding: clamp(1rem, 1.5vw, 3rem);
     height: 100%;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: 1rem;
+    gap: clamp(0.75rem, 1vw, 1.5rem);
   }
 
   .about__level {
-    padding-left: 1rem;
+    padding-left: clamp(0.75rem, 0.8vw, 1.25rem);
     border-left: 2px solid rgba(255, 255, 255, 0.2);
   }
 
   .about__level-name {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.8rem, 1.2vw, 1.2rem);
+    font-size: clamp(0.8rem, 0.95vw, 1.5rem);
     font-weight: 600;
     color: #fff;
     letter-spacing: -0.01em;
@@ -237,10 +238,10 @@ const base = import.meta.env.BASE_URL;
 
   .about__level-desc {
     font-family: 'Inter', sans-serif;
-    font-size: clamp(0.7rem, 0.9vw, 1rem);
+    font-size: clamp(0.7rem, 0.8vw, 1.2rem);
     font-weight: 300;
     color: rgba(255, 255, 255, 0.55);
-    line-height: 1.4;
+    line-height: 1.5;
   }
 
   @media (max-width: 768px) {
@@ -258,6 +259,7 @@ const base = import.meta.env.BASE_URL;
 
     .about__intro {
       max-width: 100%;
+      font-size: clamp(0.9rem, 1.1vw, 1.1rem);
     }
 
     .about__right {
