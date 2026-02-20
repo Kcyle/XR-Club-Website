@@ -339,6 +339,7 @@ const base = import.meta.env.BASE_URL;
       const section = document.querySelector(`[data-${target}]`) as HTMLElement;
       if (section) {
         section.scrollIntoView({ behavior: 'instant' });
+        history.replaceState(null, '', window.location.pathname);
       } else {
         window.location.href = `${import.meta.env.BASE_URL}#${target}`;
       }
