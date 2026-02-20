@@ -1,8 +1,7 @@
 import { initIntro } from './intro';
 import { supabase } from '../lib/supabase';
 
-document.documentElement.style.overflow = 'hidden';
-document.body.style.overflow = 'hidden';
+let introPlayed = false;
 
 function dismissLoader() {
   const loader = document.querySelector('[data-loader]');
@@ -30,8 +29,19 @@ function skipIntro() {
   }
 }
 
-async function init() {
-  if (window.location.hash) {
+export async function init() {
+  if (introPlayed) {
+    // On subsequent visits, skip intro immediately
+    skipIntro();
+    return;
+  }
+  introPlayed = true;
+
+  // Lock scroll during intro
+  document.documentElement.style.overflow = 'hidden';
+  document.body.style.overflow = 'hidden';
+
+  if (window.location.hash || window.innerWidth <= 768) {
     skipIntro();
     return;
   }
@@ -49,10 +59,4 @@ async function init() {
     document.documentElement.style.overflow = '';
     document.body.style.overflow = '';
   });
-}
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => init());
-} else {
-  init();
 }

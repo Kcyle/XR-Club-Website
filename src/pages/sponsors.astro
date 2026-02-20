@@ -48,10 +48,7 @@ const studentOrgs = [
 
   <section class="sp">
     <div class="sp__hero">
-      <div class="sp__title-wrap">
-        <span class="sp__title-outline">XR</span>
-        <h1 class="sp__title">Sponsors & Partners</h1>
-      </div>
+      <h1 class="sp__title">Sponsors & Partners</h1>
       <p class="sp__subtitle">The organizations and communities that make our work possible.</p>
     </div>
 
@@ -104,28 +101,7 @@ const studentOrgs = [
     padding: clamp(10rem, 18vh, 14rem) var(--page-padding) clamp(2rem, 4vh, 4rem);
   }
 
-  .sp__title-wrap {
-    position: relative;
-  }
-
-  .sp__title-outline {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: 'Inter', sans-serif;
-    font-size: clamp(8rem, 16vw, 18rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    color: transparent;
-    -webkit-text-stroke: 1.5px rgba(0, 0, 0, 0.06);
-    pointer-events: none;
-    user-select: none;
-    white-space: nowrap;
-  }
-
   .sp__title {
-    position: relative;
     font-family: 'Inter', sans-serif;
     font-size: clamp(3rem, 6vw, 5.5rem);
     font-weight: 800;
@@ -138,7 +114,7 @@ const studentOrgs = [
     font-family: 'Inter', sans-serif;
     font-size: clamp(1rem, 1.3vw, 1.4rem);
     font-weight: 300;
-    color: rgba(0, 0, 0, 0.45);
+    color: rgba(0, 0, 0, 0.7);
     margin-top: 1.5rem;
     max-width: 500px;
     line-height: 1.6;
@@ -225,10 +201,6 @@ const studentOrgs = [
       padding: 7rem var(--page-padding) 2rem;
     }
 
-    .sp__title-outline {
-      font-size: 6rem;
-    }
-
     .sp__title {
       font-size: 2.5rem;
     }
@@ -248,10 +220,6 @@ const studentOrgs = [
       padding: 6rem 1rem 1.5rem;
     }
 
-    .sp__title-outline {
-      font-size: 4.5rem;
-    }
-
     .sp__title {
       font-size: 2rem;
     }
@@ -264,30 +232,34 @@ const studentOrgs = [
 </style>
 
 <script>
-  function initCarousel(el: HTMLElement) {
-    const direction = el.dataset.carousel;
-    const children = el.children.length;
-    const divisor = direction === 'right' ? 2 : 3;
-    const setCount = children / divisor;
-    let setWidth = 0;
-    for (let i = 0; i < setCount; i++) {
-      const child = el.children[i] as HTMLElement;
-      setWidth += child.offsetWidth;
+  document.addEventListener('astro:page-load', () => {
+    const tracks = document.querySelectorAll('[data-carousel]');
+    if (tracks.length === 0) return; // Not on sponsors page
+
+    function initCarousel(el: HTMLElement) {
+      const direction = el.dataset.carousel;
+      const children = el.children.length;
+      const divisor = direction === 'right' ? 2 : 3;
+      const setCount = children / divisor;
+      let setWidth = 0;
+      for (let i = 0; i < setCount; i++) {
+        const child = el.children[i] as HTMLElement;
+        setWidth += child.offsetWidth;
+      }
+      const gap = parseFloat(getComputedStyle(el).gap) || 0;
+      setWidth += setCount * gap;
+
+      el.style.animationDuration = `${setWidth / 40}s`;
+      el.classList.add(direction === 'left' ? 'sp__track--left' : 'sp__track--right');
+      el.style.setProperty('--track-set-width', `-${setWidth}px`);
     }
-    const gap = parseFloat(getComputedStyle(el).gap) || 0;
-    setWidth += setCount * gap;
 
-    el.style.animationDuration = `${setWidth / 40}s`;
-    el.classList.add(direction === 'left' ? 'sp__track--left' : 'sp__track--right');
-    el.style.setProperty('--track-set-width', `-${setWidth}px`);
-  }
+    // Wait for all sponsor images to load before measuring widths
+    const images = Array.from(document.querySelectorAll<HTMLImageElement>('.sp__logo'));
+    const allLoaded = images.map(img => img.complete ? Promise.resolve() : new Promise<void>(r => { img.onload = () => r(); img.onerror = () => r(); }));
 
-  // Wait for all sponsor images to load before measuring widths
-  const tracks = document.querySelectorAll('[data-carousel]');
-  const images = Array.from(document.querySelectorAll<HTMLImageElement>('.sp__logo'));
-  const allLoaded = images.map(img => img.complete ? Promise.resolve() : new Promise<void>(r => { img.onload = () => r(); img.onerror = () => r(); }));
-
-  Promise.all(allLoaded).then(() => {
-    tracks.forEach(track => initCarousel(track as HTMLElement));
+    Promise.all(allLoaded).then(() => {
+      tracks.forEach(track => initCarousel(track as HTMLElement));
+    });
   });
 </script>

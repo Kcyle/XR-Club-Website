@@ -17,166 +17,133 @@
   import { initRenderCanvas } from '../animations/scroll';
   import type { FrameTrigger } from '../animations/scroll';
 
-  const trigger = document.querySelector('[data-render-trigger]');
-  const overlay = document.querySelector('[data-render-fullscreen]') as HTMLElement;
-  const canvas = document.querySelector('[data-render-canvas]') as HTMLCanvasElement;
-  const closeBtn = document.querySelector('[data-render-close]');
+  let escController: AbortController | undefined;
 
-  const renderBuild = document.querySelector('[data-render-build]') as HTMLElement;
-  const renderCommunity = document.querySelector('[data-render-community]') as HTMLElement;
+  document.addEventListener('astro:page-load', () => {
+    const trigger = document.querySelector('[data-render-trigger]');
+    const overlay = document.querySelector('[data-render-fullscreen]') as HTMLElement;
+    const canvas = document.querySelector('[data-render-canvas]') as HTMLCanvasElement;
+    const closeBtn = document.querySelector('[data-render-close]');
+    if (!overlay || !canvas) return;
 
-  if (renderBuild) renderBuild.style.opacity = '0';
-  if (renderCommunity) renderCommunity.style.opacity = '0';
+    const renderBuild = document.querySelector('[data-render-build]') as HTMLElement;
+    const renderCommunity = document.querySelector('[data-render-community]') as HTMLElement;
 
-  const frameTriggers: FrameTrigger[] = [];
+    if (renderBuild) renderBuild.style.opacity = '0';
+    if (renderCommunity) renderCommunity.style.opacity = '0';
 
-  if (renderBuild) {
-    frameTriggers.push({
-      frame: 435,
-      fired: false,
-      callback: () => {
-        renderBuild.style.transition = 'opacity 0.5s ease';
-        renderBuild.style.opacity = '1';
-      },
-    });
-    frameTriggers.push({
-      frame: 569,
-      fired: false,
-      callback: () => {
-        renderBuild.style.transition = 'opacity 0.4s ease';
-        renderBuild.style.opacity = '0';
-      },
-    });
-  }
+    const frameTriggers: FrameTrigger[] = [];
 
-  if (renderCommunity) {
-    frameTriggers.push({
-      frame: 704,
-      fired: false,
-      callback: () => {
-        renderCommunity.style.transition = 'opacity 0.5s ease';
-        renderCommunity.style.opacity = '1';
-      },
-    });
-    frameTriggers.push({
-      frame: 810,
-      fired: false,
-      callback: () => {
-        renderCommunity.style.transition = 'opacity 0.4s ease';
-        renderCommunity.style.opacity = '0';
-      },
-    });
-  }
+    if (renderBuild) {
+      frameTriggers.push({
+        frame: 435, fired: false,
+        callback: () => { renderBuild.style.transition = 'opacity 0.5s ease'; renderBuild.style.opacity = '1'; },
+      });
+      frameTriggers.push({
+        frame: 569, fired: false,
+        callback: () => { renderBuild.style.transition = 'opacity 0.4s ease'; renderBuild.style.opacity = '0'; },
+      });
+    }
 
-  let player: ReturnType<typeof initRenderCanvas> | null = null;
-  const base = import.meta.env.BASE_URL;
-  const audioQueue: HTMLAudioElement[] = [];
+    if (renderCommunity) {
+      frameTriggers.push({
+        frame: 704, fired: false,
+        callback: () => { renderCommunity.style.transition = 'opacity 0.5s ease'; renderCommunity.style.opacity = '1'; },
+      });
+      frameTriggers.push({
+        frame: 810, fired: false,
+        callback: () => { renderCommunity.style.transition = 'opacity 0.4s ease'; renderCommunity.style.opacity = '0'; },
+      });
+    }
 
-  // Sound triggers tied to frame timings across the ~30s render
-  // bootup: frame 0 (start), scifi: frame 435 (~14.5s, "Build Anything"), immersed: frame 704 (~23.5s, "Build Together")
-  frameTriggers.push({
-    frame: 1,
-    fired: false,
-    callback: () => {
+    let player: ReturnType<typeof initRenderCanvas> | null = null;
+    const base = import.meta.env.BASE_URL;
+    const audioQueue: HTMLAudioElement[] = [];
+    let bootupRef: HTMLAudioElement | null = null;
+    let scifiRef: HTMLAudioElement | null = null;
+
+    frameTriggers.push({ frame: 1, fired: false, callback: () => {
       const bootup = new Audio(`${base}bootup.mp3`);
-      audioQueue.push(bootup);
+      audioQueue.push(bootup); bootupRef = bootup;
       bootup.play().catch(() => {});
-    },
-  });
+    }});
 
-  frameTriggers.push({
-    frame: 170,
-    fired: false,
-    callback: () => {
+    frameTriggers.push({ frame: 150, fired: false, callback: () => {
+      if (!bootupRef) return;
+      const fade = setInterval(() => {
+        if (!bootupRef || bootupRef.volume <= 0.05) {
+          if (bootupRef) { bootupRef.pause(); bootupRef.currentTime = 0; bootupRef = null; }
+          clearInterval(fade); return;
+        }
+        bootupRef.volume = Math.max(0, bootupRef.volume - 0.1);
+      }, 30);
+    }});
+
+    frameTriggers.push({ frame: 160, fired: false, callback: () => {
+      if (bootupRef) { bootupRef.pause(); bootupRef.currentTime = 0; bootupRef = null; }
       const immersed = new Audio(`${base}immersed.mp3`);
       audioQueue.push(immersed);
       immersed.play().catch(() => {});
-    },
-  });
+    }});
 
-  frameTriggers.push({
-    frame: 184,
-    fired: false,
-    callback: () => {
-      const imm = audioQueue.find(a => a.src.includes('immersed'));
-      if (imm) { imm.pause(); imm.currentTime = 0; }
-    },
-  });
-
-  let scifiRef: HTMLAudioElement | null = null;
-  frameTriggers.push({
-    frame: 435,
-    fired: false,
-    callback: () => {
+    frameTriggers.push({ frame: 200, fired: false, callback: () => {
       const scifi = new Audio(`${base}scifi.mp3`);
-      scifi.currentTime = 36;
-      audioQueue.push(scifi);
-      scifiRef = scifi;
+      scifi.currentTime = 36 - (435 - 200) / 30;
+      scifi.volume = 0;
+      audioQueue.push(scifi); scifiRef = scifi;
       scifi.play().catch(() => {});
-    },
-  });
+      const fadeIn = setInterval(() => {
+        if (!scifiRef || scifiRef.volume >= 0.95) { if (scifiRef) scifiRef.volume = 1; clearInterval(fadeIn); return; }
+        scifiRef.volume = Math.min(1, scifiRef.volume + 0.05);
+      }, 80);
+    }});
 
-  frameTriggers.push({
-    frame: 800,
-    fired: false,
-    callback: () => {
+    frameTriggers.push({ frame: 800, fired: false, callback: () => {
       if (!scifiRef) return;
-      const fadeInterval = setInterval(() => {
-        if (!scifiRef || scifiRef.volume <= 0.02) {
-          if (scifiRef) { scifiRef.pause(); scifiRef.currentTime = 0; }
-          clearInterval(fadeInterval);
-          return;
-        }
+      const fadeOut = setInterval(() => {
+        if (!scifiRef || scifiRef.volume <= 0.02) { if (scifiRef) { scifiRef.pause(); scifiRef.currentTime = 0; } clearInterval(fadeOut); return; }
         scifiRef.volume = Math.max(0, scifiRef.volume - 0.03);
       }, 100);
-    },
-  });
+    }});
 
-  frameTriggers.push({
-    frame: 898,
-    fired: false,
-    callback: () => {
+    frameTriggers.push({ frame: 898, fired: false, callback: () => {
       if (scifiRef) { scifiRef.pause(); scifiRef.currentTime = 0; scifiRef = null; }
-    },
-  });
+    }});
 
-  function stopAudio() {
-    for (const a of audioQueue) {
-      a.pause();
-      a.currentTime = 0;
+    function stopAudio() {
+      for (const a of audioQueue) { a.pause(); a.currentTime = 0; }
+      audioQueue.length = 0;
     }
-    audioQueue.length = 0;
-  }
 
-  function openRender() {
-    if (!overlay || !canvas) return;
-    overlay.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-
-    requestAnimationFrame(() => {
+    function openRender() {
+      if (!overlay || !canvas) return;
+      overlay.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
       requestAnimationFrame(() => {
-        if (!player) {
-          player = initRenderCanvas(canvas, frameTriggers);
-        }
-        player!.start();
+        requestAnimationFrame(() => {
+          if (!player) player = initRenderCanvas(canvas, frameTriggers);
+          player!.start();
+        });
       });
-    });
-  }
-
-  function closeRender() {
-    if (!overlay) return;
-    overlay.style.display = 'none';
-    document.body.style.overflow = '';
-    player?.stop();
-    stopAudio();
-  }
-
-  trigger?.addEventListener('click', openRender);
-  closeBtn?.addEventListener('click', closeRender);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && overlay?.style.display === 'flex') {
-      closeRender();
     }
+
+    function closeRender() {
+      if (!overlay) return;
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+      player?.stop();
+      stopAudio();
+    }
+
+    trigger?.addEventListener('click', openRender);
+    closeBtn?.addEventListener('click', closeRender);
+
+    // Clean up previous document-level listener
+    escController?.abort();
+    escController = new AbortController();
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay?.style.display === 'flex') closeRender();
+    }, { signal: escController.signal });
   });
 </script>
 

@@ -173,28 +173,40 @@ import RecognitionSection from '../components/RecognitionSection.astro';
 </style>
 
 <script>
-  import '../animations/index';
+  import { init as initAnimations } from '../animations/index';
+  import { initScrollAnimations } from '../animations/scrollAnimations';
 
-  // Handle hash navigation from other pages
-  if (window.location.hash) {
-    const target = window.location.hash.slice(1);
-    if (target === 'home') {
-      window.scrollTo(0, 0);
-      history.replaceState(null, '', window.location.pathname);
-    } else {
-      const section = document.querySelector(`[data-${target}]`) as HTMLElement;
-      if (section) {
-        setTimeout(() => {
-          section.scrollIntoView({ behavior: 'instant' });
-          history.replaceState(null, '', window.location.pathname);
-        }, 100);
+  document.addEventListener('astro:page-load', () => {
+    // Only run on home page
+    if (!document.querySelector('[data-hero-wrapper]')) return;
+
+    initAnimations();
+    initScrollAnimations();
+
+    // Handle hash navigation from other pages
+    if (window.location.hash) {
+      const target = window.location.hash.slice(1);
+      if (target === 'home') {
+        window.scrollTo(0, 0);
+        history.replaceState(null, '', window.location.pathname);
+      } else {
+        const section = document.querySelector(`[data-${target}]`) as HTMLElement;
+        if (section) {
+          setTimeout(() => {
+            section.scrollIntoView({ behavior: 'instant' });
+            history.replaceState(null, '', window.location.pathname);
+          }, 100);
+        }
       }
     }
-  }
 
-  const wm = document.createElement('img');
-  wm.src = `${import.meta.env.BASE_URL}Images/vrlocked.png`;
-  wm.alt = '';
-  wm.className = 'watermark';
-  document.body.appendChild(wm);
+    // Add watermark if not already present
+    if (!document.querySelector('.watermark')) {
+      const wm = document.createElement('img');
+      wm.src = `${import.meta.env.BASE_URL}Images/vrlocked.png`;
+      wm.alt = '';
+      wm.className = 'watermark';
+      document.body.appendChild(wm);
+    }
+  });
 </script>

@@ -14,7 +14,10 @@ const base = import.meta.env.BASE_URL;
         </div>
         <p class="proj__desc">XR Creators are at the core of our membership. They are engineers, designers, and risk-takers who refuse to settle for what they've built and push themselves to create something greater. <strong>Whether you're a freshman with no experience but a strong drive to learn, or a senior with extensive experience, you're welcome here.</strong></p>
         <p class="proj__desc proj__desc--spaced">As an XR Creator, you can propose your own projects and request the resources or equipment needed to bring them to life. Note that new project proposals may undergo a more rigorous review than applications to join existing projects.</p>
-        <a href="#apply" class="proj__apply">Apply Now</a>
+        <div class="proj__btns">
+          <a href="#apply" class="proj__apply">Apply Now</a>
+          <a href={`${base}ideate`} class="proj__apply proj__apply--outline">Project Proposals</a>
+        </div>
       </div>
 
       <div class="proj__right">
@@ -222,10 +225,15 @@ const base = import.meta.env.BASE_URL;
     font-weight: 600;
   }
 
-  .proj__apply {
-    display: inline-block;
+  .proj__btns {
+    display: flex;
+    gap: 0.75rem;
     margin-top: 1.5rem;
     align-self: flex-start;
+  }
+
+  .proj__apply {
+    display: inline-block;
     font-family: 'Inter', sans-serif;
     font-size: clamp(1rem, 1.2vw, 1.4rem);
     font-weight: 500;
@@ -242,6 +250,18 @@ const base = import.meta.env.BASE_URL;
   .proj__apply:hover {
     background: rgba(255, 255, 255, 0.15);
     border-color: rgba(255, 255, 255, 0.35);
+  }
+
+  .proj__apply--outline {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .proj__apply--outline:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: #fff;
   }
 
   .proj__right {
@@ -359,8 +379,17 @@ const base = import.meta.env.BASE_URL;
     }
 
     .proj__right {
-      width: 100%;
-      grid-template-columns: 1fr 1fr;
+      display: none;
+    }
+
+    .proj__desc {
+      font-size: 1.05rem;
+    }
+
+    .proj__btns {
+      align-self: center;
+      flex-direction: column;
+      gap: 0.5rem;
     }
 
     .proj__title-outline { font-size: 5rem; }
@@ -370,8 +399,8 @@ const base = import.meta.env.BASE_URL;
   @media (max-width: 480px) {
     .proj__layout { padding: 4rem 1rem 3rem; }
 
-    .proj__right {
-      grid-template-columns: 1fr;
+    .proj__desc {
+      font-size: 1rem;
     }
 
     .proj__title-outline { font-size: 4rem; }
