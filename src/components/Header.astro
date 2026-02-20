@@ -4,7 +4,7 @@ const base = import.meta.env.BASE_URL;
 <header class="header" data-header>
   <div class="header__bar">
     <div class="header__inner">
-      <a href={`${base}`} class="header__logo-link">
+      <a href={`${base}#home`} class="header__logo-link">
         <img src={`${base}Images/XR logo.png`} alt="XR Club" class="header__logo-img" fetchpriority="high" />
       </a>
       <nav class="header__nav">
@@ -19,7 +19,7 @@ const base = import.meta.env.BASE_URL;
             <a class="header__join-item" data-nav-link data-scroll-to="resources">Equipment</a>
           </div>
         </div>
-        <a class="header__link header__link--hide-mobile" data-nav-link data-scroll-to="projects">Projects</a>
+        <a href={`${base}projects`} class="header__link header__link--hide-mobile">Projects</a>
         <a href={`${base}sponsors`} class="header__link">Sponsors</a>
         <div class="header__join">
           <span class="header__link header__join-trigger">Join Us</span>

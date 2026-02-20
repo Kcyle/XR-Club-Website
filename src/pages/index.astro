@@ -178,12 +178,17 @@ import RecognitionSection from '../components/RecognitionSection.astro';
   // Handle hash navigation from other pages
   if (window.location.hash) {
     const target = window.location.hash.slice(1);
-    const section = document.querySelector(`[data-${target}]`) as HTMLElement;
-    if (section) {
-      setTimeout(() => {
-        section.scrollIntoView({ behavior: 'instant' });
-        history.replaceState(null, '', window.location.pathname);
-      }, 100);
+    if (target === 'home') {
+      window.scrollTo(0, 0);
+      history.replaceState(null, '', window.location.pathname);
+    } else {
+      const section = document.querySelector(`[data-${target}]`) as HTMLElement;
+      if (section) {
+        setTimeout(() => {
+          section.scrollIntoView({ behavior: 'instant' });
+          history.replaceState(null, '', window.location.pathname);
+        }, 100);
+      }
     }
   }
 

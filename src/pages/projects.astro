@@ -1,0 +1,79 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+const base = import.meta.env.BASE_URL;
+---
+
+<BaseLayout title="Projects — XR Club">
+  <Header />
+
+  <section class="proj-closed">
+    <div class="proj-closed__card">
+      <h1 class="proj-closed__title">Project Listings</h1>
+      <p class="proj-closed__desc">Project listings will be available once applications open. Check back soon.</p>
+      <a href={base} class="proj-closed__btn">Back to Home</a>
+    </div>
+  </section>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  .proj-closed {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: #000;
+  }
+
+  .proj-closed__card {
+    text-align: center;
+    max-width: 480px;
+    padding: 3rem 2.5rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+  }
+
+  .proj-closed__title {
+    font-family: 'Inter', sans-serif;
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #fff;
+    margin-bottom: 1rem;
+  }
+
+  .proj-closed__desc {
+    font-family: 'Inter', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+  }
+
+  .proj-closed__btn {
+    display: inline-block;
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 0.7rem 2rem;
+    border-radius: 980px;
+    text-decoration: none;
+    transition: all 200ms ease;
+  }
+
+  .proj-closed__btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+</style>

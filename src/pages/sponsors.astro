@@ -6,40 +6,40 @@ import Footer from '../components/Footer.astro';
 const base = import.meta.env.BASE_URL;
 
 const departments = [
-  { src: `${base}Images/partners/1.png`, alt: 'UMD Department' },
+  { src: `${base}Images/partners/1.webp`, alt: 'UMD Department' },
   { src: `${base}Images/partners/2.webp`, alt: 'UMD Department', dark: true },
-  { src: `${base}Images/partners/3.png`, alt: 'UMD Department' },
-  { src: `${base}Images/partners/12.png`, alt: 'UMD Department' },
-  { src: `${base}Images/partners/9.png`, alt: 'HCIL' },
+  { src: `${base}Images/partners/3.webp`, alt: 'UMD Department' },
+  { src: `${base}Images/partners/12.webp`, alt: 'UMD Department' },
+  { src: `${base}Images/partners/9.webp`, alt: 'HCIL' },
 ];
 
 const companies = [
-  { src: `${base}Images/partners/13.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/5.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/6.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/7.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/8.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/14.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/15.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/16.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/17.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/18.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/19.png`, alt: 'Corporate Partner', dark: true },
-  { src: `${base}Images/partners/20.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/21.png`, alt: 'Corporate Partner' },
-  { src: `${base}Images/partners/23.png`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/13.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/5.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/6.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/7.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/8.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/14.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/15.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/16.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/17.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/18.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/19.webp`, alt: 'Corporate Partner', dark: true },
+  { src: `${base}Images/partners/20.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/21.webp`, alt: 'Corporate Partner' },
+  { src: `${base}Images/partners/23.webp`, alt: 'Corporate Partner' },
   { src: `${base}Images/partners/25.webp`, alt: 'Corporate Partner' },
 ];
 
 const studentOrgs = [
-  { src: `${base}Images/partners/4.png`, alt: 'Student Organization' },
-  { src: `${base}Images/partners/10.png`, alt: 'Student Organization' },
-  { src: `${base}Images/partners/11.png`, alt: 'Student Organization', dark: true },
-  { src: `${base}Images/partners/22.png`, alt: 'Student Organization' },
-  { src: `${base}Images/partners/24.jpg`, alt: 'Student Organization' },
-  { src: `${base}Images/partners/26.png`, alt: 'Student Organization' },
-  { src: `${base}Images/partners/27.png`, alt: 'Student Organization' },
-  { src: `${base}Images/partners/28.jpg`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/4.webp`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/10.webp`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/11.webp`, alt: 'Student Organization', dark: true },
+  { src: `${base}Images/partners/22.webp`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/24.webp`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/26.webp`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/27.webp`, alt: 'Student Organization' },
+  { src: `${base}Images/partners/28.webp`, alt: 'Student Organization' },
 ];
 ---
 
@@ -259,11 +259,9 @@ const studentOrgs = [
 </style>
 
 <script>
-  document.querySelectorAll('[data-carousel]').forEach(track => {
-    const el = track as HTMLElement;
+  function initCarousel(el: HTMLElement) {
     const direction = el.dataset.carousel;
     const children = el.children.length;
-    // Each set is duplicated 2-3x, find one set's width
     const divisor = direction === 'right' ? 2 : 3;
     const setCount = children / divisor;
     let setWidth = 0;
@@ -277,5 +275,14 @@ const studentOrgs = [
     el.style.animationDuration = `${setWidth / 40}s`;
     el.classList.add(direction === 'left' ? 'sp__track--left' : 'sp__track--right');
     el.style.setProperty('--track-set-width', `-${setWidth}px`);
+  }
+
+  // Wait for all sponsor images to load before measuring widths
+  const tracks = document.querySelectorAll('[data-carousel]');
+  const images = Array.from(document.querySelectorAll<HTMLImageElement>('.sp__logo'));
+  const allLoaded = images.map(img => img.complete ? Promise.resolve() : new Promise<void>(r => { img.onload = () => r(); img.onerror = () => r(); }));
+
+  Promise.all(allLoaded).then(() => {
+    tracks.forEach(track => initCarousel(track as HTMLElement));
   });
 </script>
